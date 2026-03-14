@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 动作百科</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <style>
+        /* --- 沿用并优化的 UI 风格 --- */
+        .filter-section { margin-bottom: 2rem; background: var(--bg-surface); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .muscle-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem; }
+        
+        .pill { 
+            padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color);
+            cursor: pointer; transition: 0.3s; color: var(--text-muted); font-size: 0.9rem;
+            background: rgba(255,255,255,0.02);
+        }
+        .pill:hover { border-color: var(--primary); color: var(--primary); }
+        .pill.active { background: var(--primary); color: black; border-color: var(--primary); font-weight: bold; }
+
+        .exercise-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        /* 动作卡片优化 */
+        .lib-card {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            padding: 1.5rem; border-radius: var(--radius-md); position: relative;
+            cursor: pointer; transition: 0.3s; overflow: hidden;
+        }
+        .lib-card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(193, 255, 0, 0.1); 
+        }
+        
+        /* 个人表现徽章 - 强化视觉 */
+        .pr-badge {
+            position: absolute; top: 0; right: 0;
+            background: linear-gradient(135deg, var(--primary), #a8e600); color: black;
+            padding: 5px 12px; border-radius: 0 0 0 12px; font-size: 0.75rem;
+            font-weight: 800; box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .exercise-name { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-main); }
+        .exercise-meta { font-size: 0.9rem; color: var(--text-muted); display: flex; gap: 10px; }
+        .tag { background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+        /* AI 指南侧边抽屉 */
+        .detail-drawer {
+            position: fixed; top: 0; right: -450px; width: 400px; height: 100%;
+            background: #121212; border-left: 1px solid var(--primary);
+            z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 30px; box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+        }
+        .detail-drawer.open { right: 0; }
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 1999; backdrop-filter: blur(4px);
+        }
+        .ai-content { line-height: 1.8; color: #ccc; margin-top: 20px; white-space: pre-line; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item ">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+
+            <a href="library.html" class="nav-item active">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span> </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span> </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <h2>📚 动作百科</h2>
+            <div style="position: relative; width: 350px;">
+                <input type="text" id="lib-search" placeholder="输入动作名或器材搜素..." 
+                       style="width:100%; padding:12px; background:var(--bg-body); border:1px solid var(--border-color); color:white; border-radius:8px; outline:none;">
+            </div>
+        </header>
+
+        <section class="content-wrapper" style="padding: 2rem;">
+            <div class="filter-section">
+                <label style="color: var(--primary); font-weight: bold; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Target Muscle / 目标肌群</label>
+                <div class="muscle-pills" id="muscle-pills">
+                    <div class="pill active" data-muscle="">全部</div>
+                    <div class="pill" data-muscle="胸部">胸部</div>
+                    <div class="pill" data-muscle="背部">背部</div>
+                    <div class="pill" data-muscle="腿部">腿部</div>
+                    <div class="pill" data-muscle="肩部">肩部</div>
+                    <div class="pill" data-muscle="手臂">手臂</div>
+                    <div class="pill" data-muscle="核心">核心</div>
+                    <div class="pill" data-muscle="有氧">有氧</div>
+                </div>
+            </div>
+
+            <div id="exercise-grid" class="exercise-grid">
+                </div>
+        </section>
+    </main>
+
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="detail-drawer" id="detail-drawer">
+        <span onclick="closeDrawer()" style="float:right; cursor:pointer; font-size:1.5rem; color:var(--primary)">&times;</span>
+        <h2 id="drawer-title" style="color:var(--primary); margin-top:10px;">动作详情</h2>
+        <div id="drawer-meta" style="margin-top:5px; color:var(--text-muted); font-size:0.9rem;"></div>
+        
+        <div style="margin-top:30px; border-top:1px solid #333; padding-top:20px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <span style="font-size:1.2rem;">🤖</span>
+                <strong style="color:var(--primary)">AI 动作执行指南</strong>
+            </div>
+            <div id="ai-loading" style="display:none; color:var(--text-muted); font-style:italic;">深度思考中 (DeepSeek)...</div>
+            <div id="ai-guide-text" class="ai-content"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/library.js"></script>
+</body>
+</html>

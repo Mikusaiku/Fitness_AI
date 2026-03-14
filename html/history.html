@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 训练历史</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <style>
+        .history-list { display: flex; flex-direction: column; gap: 20px; }
+        .history-card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-md); 
+            padding: 1.5rem; 
+            transition: var(--transition);
+        }
+        .history-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .session-info h3 { margin: 0; color: var(--text-main); font-size: 1.2rem; }
+        .session-info small { color: var(--text-muted); }
+        .exercise-tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+        .exercise-tag { 
+            background: rgba(193, 255, 0, 0.1); 
+            color: var(--primary); 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 0.85rem; 
+            border: 1px solid rgba(193, 255, 0, 0.2);
+        }
+        .empty-state { text-align: center; padding: 4rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item ">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item active">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+
+            <a href="library.html" class="nav-item">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span> </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span> </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <h2>📜 训练历史记录</h2>
+            <div class="user-info" id="history-user-display"></div>
+        </header>
+
+        <section class="content-wrapper">
+            <div id="history-container" class="history-list">
+                <div class="empty-state">⏳ 正在加载您的训练足迹...</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/history.js"></script>
+</body>
+</html>

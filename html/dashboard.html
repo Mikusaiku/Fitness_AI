@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 状态总览</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        /* 针对状态总览页面的专用精修样式 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        #radar-chart {
+            width: 100%;
+            height: 450px;
+        }
+
+        .ai-recommend-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .weakness-tag {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin: 0.5rem 0;
+            display: block;
+        }
+
+        /* 推荐卡片样式 */
+        .recommend-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 1.2rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .recommend-card:hover {
+            border-color: var(--primary);
+            background: rgba(193, 255, 0, 0.05);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+            <a href="library.html" class="nav-item">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span> </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span> </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <div class="user-info">
+                欢迎回来, <span id="current-user-name">加载中...</span>
+            </div>
+            <div class="system-status">
+                <span class="status-dot"></span> 系统在线 (Port: 5001)
+            </div>
+        </header>
+
+        <section class="content-wrapper">
+            <header>
+                <h1>智能体能画像</h1>
+                <p style="color: var(--text-muted);">基于您最近 30 天的训练负荷自动生成</p>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div id="radar-chart"></div>
+                </div>
+
+                <div class="ai-recommend-section">
+                    <div class="card">
+                        <h3>AI 深度分析</h3>
+                        <p style="margin-top: 1rem;">当前短板肌群：</p>
+                        <span id="weak-muscle-name" class="weakness-tag">检测中...</span>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">
+                            AI 建议：您目前的 <span id="weak-muscle-name-inline"></span> 发育相对滞后，建议增加以下专项训练以维持体态平衡。
+                        </p>
+                    </div>
+
+                    <div id="ai-recommend-list" class="ai-recommend-section">
+                        </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

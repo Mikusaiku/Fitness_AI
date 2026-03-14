@@ -1,0 +1,25 @@
+# --- 隐私与配置 ---
+.env
+db_config.py
+# 如果你还有其他存储密码的文件，也请写在这里
+
+# --- Python 环境与缓存 ---
+__pycache__/
+*.pyc
+venv/
+env/
+setting.env
+build/
+dist/
+
+# --- IDE 与编辑器配置 ---
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# --- 数据库临时文件 ---
+*.log
+*.sqlite
+# 建议不要直接上传大的 SQL 数据备份，只保留 schema 即可
+# *.sql

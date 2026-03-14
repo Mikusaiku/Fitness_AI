@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 训练执行</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <style>
+        /* --- 1. 计划模板选择区样式 --- */
+        .plan-template-zone {
+            margin-bottom: 2rem;
+            background: rgba(193, 255, 0, 0.03);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--primary);
+        }
+        .plan-control-group { display: flex; gap: 12px; margin-top: 10px; }
+        .plan-select {
+            flex: 1; padding: 12px;
+            background: var(--bg-surface); color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm); outline: none;
+        }
+
+        /* --- 2. 肌肉分类卡片区 --- */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px; margin-bottom: 2rem;
+        }
+        .muscle-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 1.2rem; border-radius: var(--radius-md);
+            text-align: center; cursor: pointer; transition: var(--transition);
+        }
+        .muscle-card:hover {
+            border-color: var(--primary);
+            background: rgba(193, 255, 0, 0.05); transform: translateY(-3px);
+        }
+
+        /* --- 3. 核心修复：搜索与联想栏定位 --- */
+        .search-section { margin-bottom: 2.5rem; }
+        
+        /* 包装盒控制相对定位 */
+        .search-box-wrapper { position: relative; width: 100%; }
+
+        #exercise-search {
+            width: 100%; padding: 1.2rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: white; border-radius: var(--radius-md);
+            font-size: 1rem; outline: none;
+        }
+        #exercise-search:focus { border-color: var(--primary); }
+
+        /* 联想下拉栏 - 绝对定位并置顶 */
+        .search-dropdown {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: #1a1a1a; /* 稍微加深背景色 */
+            border: 1px solid var(--primary);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            z-index: 9999; /* 确保浮在AI按钮上方 */
+            max-height: 280px; overflow-y: auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            margin-top: 2px;
+        }
+        .search-item {
+            padding: 12px 15px; cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .search-item:hover { background: rgba(193, 255, 0, 0.15); color: var(--primary); }
+
+        /* --- 4. 训练卡片与表格 --- */
+        .exercise-card { margin-bottom: 1.5rem; background: var(--bg-surface); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .set-table { width: 100%; margin: 1rem 0; border-collapse: collapse; table-layout: fixed; }
+        .set-table th, .set-table td { padding: 12px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .set-table input { width: 85%; padding: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 4px; text-align: center; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item ">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item active">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+
+            <a href="library.html" class="nav-item">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span> </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span> </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <div class="user-info">状态：<span id="session-status" style="color:var(--danger)">未开始训练</span></div>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-cancel-session" class="btn btn-ghost" style="display: none; border: 1px solid #444; color: var(--text-muted);">取消训练</button>
+                <button id="btn-session" class="btn btn-primary">开启今日训练</button>
+            </div>
+        </header>
+
+        <section class="content-wrapper" style="max-width: 900px; margin: 0 auto;">
+            <div id="category-panel" style="display: none;">
+                
+                <div class="plan-template-zone">
+                    <label style="font-size: 0.9rem; color: var(--primary);">⭐ 我的收藏计划模板：</label>
+                    <div class="plan-control-group">
+                        <select id="select-my-plan" class="plan-select">
+                            <option value="">-- 开启训练后加载模板 --</option>
+                        </select>
+                        <button id="btn-apply-plan" class="btn btn-secondary btn-sm">立即套用</button>
+                    </div>
+                </div>
+
+                <div class="category-grid">
+                    <div class="muscle-card" onclick="fetchMuscleExercises('胸部')"><span>胸部</span></div>
+                    <div class="muscle-card" onclick="fetchMuscleExercises('背部')"><span>背部</span></div>
+                    <div class="muscle-card" onclick="fetchMuscleExercises('腿部')"><span>腿部</span></div>
+                    <div class="muscle-card" onclick="fetchMuscleExercises('肩部')"><span>肩部</span></div>
+                    <div class="muscle-card" onclick="fetchMuscleExercises('手臂')"><span>手臂</span></div>
+                    <div class="muscle-card" onclick="fetchMuscleExercises('有氧')"><span>有氧</span></div>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-box-wrapper">
+                        <input type="text" id="exercise-search" placeholder="输入动作名搜索，或点击上方分类..." autocomplete="off">
+                        <div id="search-dropdown" class="search-dropdown" style="display: none;"></div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <button id="btn-ai-plan" class="btn btn-secondary" style="width: 100%; padding: 1.1rem; font-weight: bold; border: 1px solid var(--primary);">
+                            ✨ 获取 AI 智能训练推荐 (基于当前体能)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="exercise-list"></div>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/training.js"></script>
+</body>
+</html>

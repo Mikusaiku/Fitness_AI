@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Fitness AI - 动作指南</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <style>
+        .guide-container { max-width: 800px; margin: 40px auto; }
+        .guide-header { margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+        .ai-content { 
+            background: var(--bg-surface); 
+            padding: 2rem; 
+            border-radius: var(--radius-lg); 
+            line-height: 2; 
+            white-space: pre-wrap; /* 保留 AI 返回的换行格式 */
+        }
+        .loading-spinner { color: var(--primary); text-align: center; padding: 50px; }
+    </style>
+</head>
+<body>
+    <main class="main-content" style="margin-left: 0;"> <div class="content-wrapper">
+            <nav style="margin-bottom: 20px;">
+                <button class="btn btn-ghost" onclick="history.back()">← 返回</button>
+            </nav>
+
+            <div class="guide-container">
+                <header class="guide-header">
+                    <h1 id="exercise-title">加载中...</h1>
+                    <span class="badge">AI 智能生成的专业指导</span>
+                </header>
+
+                <div id="guide-body" class="ai-content">
+                    <div class="loading-spinner">🚀 正在调取 DeepSeek 智能分析...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/guide.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 登录</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; background: #0a0a0a; }
+        .auth-container { width: 400px; background: var(--bg-surface); padding: 2.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+        .auth-header { text-align: center; margin-bottom: 2rem; }
+        .auth-header h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 6px; outline: none; }
+        .form-group input:focus { border-color: var(--primary); }
+        .auth-btn { width: 100%; padding: 12px; margin-top: 1rem; font-weight: bold; }
+        .toggle-link { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
+        .toggle-link span { color: var(--primary); text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🚀 Fitness AI</h1>
+            <p id="auth-subtitle">请登录您的账号</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label>电子邮箱</label>
+                <input type="email" id="login-email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary auth-btn">立即登录</button>
+        </form>
+
+        <form id="register-form" style="display: none;">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="reg-username" placeholder="健身先锋" required>
+            </div>
+            <div class="form-group">
+                <label>电子邮箱</label>
+                <input type="email" id="reg-email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>设置密码</label>
+                <input type="password" id="reg-password" placeholder="至少 6 位数字或字母" required>
+            </div>
+            <button type="submit" class="btn btn-secondary auth-btn">注册并登录</button>
+        </form>
+
+        <div class="toggle-link" id="toggle-auth">
+            还没有账号？ <span>点击注册</span>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const regForm = document.getElementById('register-form');
+        const toggleBtn = document.getElementById('toggle-auth');
+        const subtitle = document.getElementById('auth-subtitle');
+
+        // 切换登录/注册模式
+        toggleBtn.addEventListener('click', () => {
+            const isLogin = loginForm.style.display !== 'none';
+            loginForm.style.display = isLogin ? 'none' : 'block';
+            regForm.style.display = isLogin ? 'block' : 'none';
+            subtitle.innerText = isLogin ? '创建一个新账号' : '请登录您的账号';
+            toggleBtn.innerHTML = isLogin ? '已有账号？ <span>点击登录</span>' : '还没有账号？ <span>点击注册</span>';
+        });
+
+        // 登录逻辑
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await FitnessAPI.request('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: document.getElementById('login-email').value,
+                        password: document.getElementById('login-password').value
+                    })
+                });
+                if (res.status === 'success') {
+                    // 核心：保存登录态并跳转
+                    localStorage.setItem('userId', res.user_id);
+                    localStorage.setItem('username', res.username);
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (err) { alert("登录失败: " + err.message); }
+        });
+
+        // 注册逻辑
+        regForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await FitnessAPI.request('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: document.getElementById('reg-username').value,
+                        email: document.getElementById('reg-email').value,
+                        password: document.getElementById('reg-password').value
+                    })
+                });
+                if (res.status === 'success') {
+                    alert("注册成功，请使用新账号登录！");
+                    location.reload();
+                }
+            } catch (err) { alert("注册失败: " + err.message); }
+        });
+    </script>
+</body>
+</html>

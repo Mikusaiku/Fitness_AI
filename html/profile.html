@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 个人资料</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <style>
+        .profile-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        .profile-card { background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2.5rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; }
+        .user-icon-large { width: 100px; height: 100px; background: var(--primary); color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; }
+        .user-info-text h1 { color: var(--text-main); margin-bottom: 0.5rem; }
+        .user-info-text p { color: var(--text-muted); font-size: 0.9rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 2rem; }
+        .stat-box { background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-md); text-align: center; }
+        .stat-box h3 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
+        .stat-unit { font-size: 0.9rem; color: var(--text-muted); margin-left: 4px; }
+        .update-section { background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-bottom: 2rem; }
+        .metrics-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 150px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); }
+        .form-group input { width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 6px; }
+        .pr-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .pr-card { background: rgba(193, 255, 0, 0.05); border: 1px solid rgba(193, 255, 0, 0.2); padding: 1.2rem; border-radius: var(--radius-md); text-align: center; }
+        .pr-card .exercise-name { font-size: 0.9rem; color: var(--text-main); margin-bottom: 8px; }
+        .pr-card .pr-value { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item ">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item ">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+
+            <a href="library.html" class="nav-item">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span> </a>
+            <a href="profile.html" class="nav-item active">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span> </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <h2>👤 个人中心</h2>
+            <button onclick="AuthGuard.logout()" class="btn btn-ghost" style="color: var(--danger);">退出登录</button>
+        </header>
+
+        <section class="profile-container">
+            <div class="profile-card">
+                <div class="user-icon-large" id="user-initial">U</div>
+                <div class="user-info-text">
+                    <h1 id="user-name">加载中...</h1>
+                    <p id="user-email">email@example.com</p>
+                    <p id="join-date">注册于: --</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>当前体重</h3>
+                    <div><span class="stat-value" id="current-weight">--</span><span class="stat-unit">kg</span></div>
+                </div>
+                <div class="stat-box">
+                    <h3>最新体脂</h3>
+                    <div><span class="stat-value" id="current-fat">--</span><span class="stat-unit">%</span></div>
+                </div>
+                <div class="stat-box">
+                    <h3>BMI 指数</h3>
+                    <div><span class="stat-value" id="current-bmi">--</span><span class="stat-unit" id="bmi-status"></span></div>
+                </div>
+            </div>
+
+            <div class="update-section">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary);">📥 同步今日身体指标</h3>
+                <form id="metrics-form" class="metrics-form">
+                    <div class="form-group">
+                        <label>身高 (cm)</label>
+                        <input type="number" step="0.1" id="input-height" placeholder="175.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>体重 (kg)</label>
+                        <input type="number" step="0.1" id="input-weight" placeholder="70.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>体脂率 (%)</label>
+                        <input type="number" step="0.1" id="input-fat" placeholder="15.0" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">更新并计算 BMI</button>
+                </form>
+            </div>
+
+            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                🏆 力量巅峰记录 (Personal Records)
+            </h3>
+            <div id="pr-wall" class="pr-wall"></div>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

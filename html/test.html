@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 样式测试页面</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <span class="icon-placeholder">📊</span>
+                <span>仪表盘</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="navbar">
+            <div class="user-info">
+                当前用户: <span id="current-user-name">User_01</span> (ID: 1)
+            </div>
+            <div class="system-status">
+                <span class="status-dot"></span> 系统在线
+            </div>
+        </header>
+
+        <section class="content-wrapper">
+            <h1>UI 组件测试面板</h1>
+            <p class="description">本页面用于测试 <code>base.css</code> 的变量定义及 <code>layout.css</code> 的响应式结构。</p>
+
+            <hr>
+
+            <h2>1. 按钮 (Buttons)</h2>
+            <div class="test-row">
+                <button class="btn btn-primary">开始训练 (Primary)</button>
+                <button class="btn btn-secondary">保存更改 (Secondary)</button>
+                <button class="btn btn-danger">删除动作 (Danger)</button>
+                <button class="btn btn-ghost">取消 (Ghost)</button>
+            </div>
+
+            <h2>2. 动作卡片组件 (Exercise Cards)</h2>
+            <div class="exercise-grid">
+                <div class="card exercise-card">
+                    <div class="card-header">
+                        <h3>杠铃卧推</h3>
+                        <span class="badge">胸部</span>
+                        <button class="btn-icon-delete" title="删除科目">×</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="sets-table">
+                            <thead>
+                                <tr>
+                                    <th>组次</th>
+                                    <th>重量 (kg)</th>
+                                    <th>次数</th>
+                                    <th>1RM 预估</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="number" value="80" class="input-inline"></td>
+                                    <td><input type="number" value="10" class="input-inline"></td>
+                                    <td><strong>106.7</strong></td>
+                                    <td><button class="btn-text-danger">删除</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-sm btn-outline">+ 添加一组 (Add Set)</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>3. 表单元素 (Forms)</h2>
+            <div class="card">
+                <div class="form-group">
+                    <label>身体重量 (kg)</label>
+                    <input type="text" placeholder="请输入当前体重..." class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>目标肌群</label>
+                    <select class="form-select">
+                        <option>胸部</option>
+                        <option>腿部</option>
+                        <option>肩部</option>
+                    </select>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

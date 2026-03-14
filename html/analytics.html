@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - 数据分析</title>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .exercise-selector {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-md);
+            outline: none;
+            cursor: pointer;
+        }
+        #strength-chart {
+            width: 100%;
+            height: 500px;
+            margin-top: 1rem;
+        }
+        .chart-card { min-height: 600px; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🚀</span>
+            <span class="logo-text">Fitness AI</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon-placeholder">📊</span>
+                <span>状态总览</span>
+            </a>
+            <a href="training.html" class="nav-item">
+                <span class="icon-placeholder">🏋️</span>
+                <span>训练执行</span>
+            </a>
+            <a href="analytics.html" class="nav-item active">
+                <span class="icon-placeholder">📈</span>
+                <span>数据分析</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="icon-placeholder">🕒</span>
+                <span>训练历史</span>
+            </a>
+            <a href="library.html" class="nav-item">
+                <span class="icon-placeholder">📚</span>
+                <span>动作百科</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon-placeholder">👤</span>
+                <span>个人资料</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="navbar">
+            <div class="user-info">力量增长预测中心</div>
+            <div class="system-status"><span class="status-dot"></span> 数据引擎就绪</div>
+        </header>
+
+        <section class="content-wrapper">
+            <div class="analytics-header">
+                <div>
+                    <h1>力量趋势分析</h1>
+                    <p style="color: var(--text-muted);">追踪您的 $1RM$ 进步轨迹</p>
+                </div>
+                <select id="exercise-select" class="exercise-selector">
+                    <option value="">加载动作列表中...</option>
+                </select>
+            </div>
+            <div class="card chart-card" style="margin-bottom: 2.5rem; min-height: 450px;">
+                <div id="strength-chart" style="height: 400px;"></div>
+            </div>
+
+        
+            <div class="analytics-header">
+                <div>
+                    <h1>身体指数变化趋势</h1>
+                    <p style="color: var(--text-muted);">监控体重与体脂的动态平衡</p>
+                </div>
+                <select id="body-metric-type" class="exercise-selector">
+                    <option value="both">综合对比 (双轴)</option>
+                    <option value="weight">仅看体重 (kg)</option>
+                    <option value="fat">仅看体脂 (%)</option>
+                </select>
+            </div>
+            <div class="card chart-card" style="min-height: 450px;">
+                <div id="body-trends-chart" style="height: 400px;"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/analytics.js"></script>
+</body>
+</html>
